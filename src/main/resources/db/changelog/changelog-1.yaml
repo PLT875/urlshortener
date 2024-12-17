@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: plt875
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            tableExists:
+              tableName: url
+      changes:
+        - createTable:
+            tableName: url
+            columns:
+              - column:
+                  name: id
+                  type: varchar(255)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: long_url
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: short_url
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
