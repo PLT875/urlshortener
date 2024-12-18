@@ -24,14 +24,14 @@ public class UrlController {
 
     @PostMapping(path = "/v1/url", consumes = "application/json", produces = "application/json")
     ResponseEntity<CreateUrlResponseDto> shorten(@RequestBody CreateUrlRequestDto shortenUrlRequestDto) {
-        return ResponseEntity.ok(CreateUrlResponseDto
-                .from(urlService.shorten(shortenUrlRequestDto.url())));
+        return new ResponseEntity<>(CreateUrlResponseDto
+                .from(urlService.createShortUrl(shortenUrlRequestDto.url())), HttpStatus.CREATED);
     }
 
     @DeleteMapping(path = "/v1/url/{key}")
     ResponseEntity<Void> delete(@PathVariable String key) {
-        urlService.delete(key);
-        return new ResponseEntity<>(HttpStatus.OK);
+        urlService.deleteShortUrl(key);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @ExceptionHandler(UrlNotFoundException.class)

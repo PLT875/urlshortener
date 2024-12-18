@@ -22,8 +22,3 @@ databaseChangeLog:
                   type: varchar(255)
                   constraints:
                     nullable: false
-              - column:
-                  name: short_url
-                  type: varchar(255)
-                  constraints:
-                    nullable: false
