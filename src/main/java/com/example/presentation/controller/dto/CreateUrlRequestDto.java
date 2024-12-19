@@ -1,4 +1,9 @@
 package com.example.presentation.controller.dto;
 
-public record CreateUrlRequestDto(String url) {
+import lombok.NonNull;
+
+public record CreateUrlRequestDto(
+        // todo: validate URL pattern
+        @NonNull
+        String url) {
 }

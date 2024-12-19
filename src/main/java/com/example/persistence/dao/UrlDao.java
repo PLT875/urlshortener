@@ -20,7 +20,4 @@ public class UrlDao {
 
         @Column(name = "long_url")
         private String longUrl;
-
-        @Column(name = "short_url")
-        private String shortUrl;
 }
