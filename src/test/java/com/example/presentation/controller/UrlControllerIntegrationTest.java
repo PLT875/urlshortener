@@ -3,6 +3,8 @@ package com.example.presentation.controller;
 import com.example.testingutil.BaseIntegrationTest;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.when;
@@ -50,12 +52,23 @@ public class UrlControllerIntegrationTest extends BaseIntegrationTest {
             body("short_url", equalTo(shortUrl));
     }
 
-    @Test
-    void createShortUrlBadRequest() {
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "",
+            "www.google.com",
+            "ftp://foo.bar.com",
+            "http://localhost:8888/test",
+            "https://codingchallenges.fyi/challenges//challenge-url-shortener"
+    })
+    void createShortUrlBadRequest(String badUrl) {
         given().
             header("Content-Type", "application/json").
             header("Accept", "application/json").
-            body("{}").
+            body("""
+                    {
+                        "url": "%s"
+                    }
+                """.formatted(badUrl)).
         when().
             post("/v1/url").
         then().
@@ -63,7 +76,7 @@ public class UrlControllerIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    void deleteShortenUrl() {
+    void deleteShortUrl() {
         String requestBody = """
                 {
                     "url": "https://www.wikipedia.org"
