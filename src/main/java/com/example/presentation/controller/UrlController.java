@@ -4,6 +4,7 @@ import com.example.domain.UrlService;
 import com.example.domain.exception.UrlNotFoundException;
 import com.example.presentation.controller.dto.CreateUrlRequestDto;
 import com.example.presentation.controller.dto.CreateUrlResponseDto;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,7 @@ public class UrlController {
     private final UrlService urlService;
 
     @PostMapping(path = "/v1/url", consumes = "application/json", produces = "application/json")
-    ResponseEntity<CreateUrlResponseDto> createShortUrl(@RequestBody CreateUrlRequestDto shortenUrlRequestDto) {
+    ResponseEntity<CreateUrlResponseDto> createShortUrl(@RequestBody @Valid CreateUrlRequestDto shortenUrlRequestDto) {
         return new ResponseEntity<>(CreateUrlResponseDto
                 .from(urlService.createShortUrl(shortenUrlRequestDto.url())), HttpStatus.CREATED);
     }

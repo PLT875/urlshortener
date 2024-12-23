@@ -16,14 +16,15 @@ public class RedirectControllerIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void redirect() {
+        String testUrl = "https://codingchallenges.fyi/challenges/challenge-url-shortener";
         Response createShortUrlResponse = given().
             header("Content-Type", "application/json").
             header("Accept", "application/json").
             body( """
                 {
-                    "url": "http://localhost:8888/example"
+                    "url": "%s"
                 }
-                """).
+                """.formatted(testUrl)).
             when().
             post("/v1/url").
             then()
@@ -43,7 +44,7 @@ public class RedirectControllerIntegrationTest extends BaseIntegrationTest {
 
         assertAll(
             () -> assertThat(redirectResponse1.statusCode()).isEqualTo(HttpStatus.SC_MOVED_TEMPORARILY),
-            () -> assertThat(redirectResponse1.getHeader(HttpHeaders.LOCATION)).isEqualTo("http://localhost:8888/example")
+            () -> assertThat(redirectResponse1.getHeader(HttpHeaders.LOCATION)).isEqualTo(testUrl)
         );
 
         when().
