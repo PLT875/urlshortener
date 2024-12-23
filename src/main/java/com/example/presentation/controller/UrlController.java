@@ -30,7 +30,7 @@ public class UrlController {
     }
 
     @DeleteMapping(path = "/v1/url/{key}")
-    ResponseEntity<Void> deleteShortUrl(@PathVariable String key) {
+    ResponseEntity<Void> deleteShortUrl(@PathVariable("key") String key) {
         urlService.deleteShortUrl(key);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

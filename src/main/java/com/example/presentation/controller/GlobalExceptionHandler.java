@@ -30,7 +30,7 @@ public class GlobalExceptionHandler {
             fieldErrorDtos.add(new FieldErrorDto(
                     fieldError.getDefaultMessage(),
                     fieldError.getField(),
-                    (String) fieldError.getRejectedValue()));
+                    fieldError.getRejectedValue().toString()));
         }
 
         return new ErrorDto("request body contains errors", fieldErrorDtos);
