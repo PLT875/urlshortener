@@ -72,7 +72,11 @@ public class UrlControllerIntegrationTest extends BaseIntegrationTest {
         when().
             post("/v1/url").
         then().
-            statusCode(SC_BAD_REQUEST);
+            statusCode(SC_BAD_REQUEST).
+            body("message", equalTo("request body contains errors")).
+            body("errors[0].message", equalTo("url is invalid")).
+            body("errors[0].field", equalTo("url")).
+            body("errors[0].value", equalTo(badUrl));
     }
 
     @Test

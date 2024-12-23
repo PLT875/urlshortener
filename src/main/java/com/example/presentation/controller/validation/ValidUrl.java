@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ValidUrl {
-    String message() default "url is not valid";
+    String message() default "url is invalid";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }
