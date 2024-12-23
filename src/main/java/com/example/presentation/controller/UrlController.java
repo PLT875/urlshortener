@@ -23,13 +23,13 @@ public class UrlController {
     private final UrlService urlService;
 
     @PostMapping(path = "/v1/url", consumes = "application/json", produces = "application/json")
-    ResponseEntity<CreateUrlResponseDto> shorten(@RequestBody CreateUrlRequestDto shortenUrlRequestDto) {
+    ResponseEntity<CreateUrlResponseDto> createShortUrl(@RequestBody CreateUrlRequestDto shortenUrlRequestDto) {
         return new ResponseEntity<>(CreateUrlResponseDto
                 .from(urlService.createShortUrl(shortenUrlRequestDto.url())), HttpStatus.CREATED);
     }
 
     @DeleteMapping(path = "/v1/url/{key}")
-    ResponseEntity<Void> delete(@PathVariable String key) {
+    ResponseEntity<Void> deleteShortUrl(@PathVariable String key) {
         urlService.deleteShortUrl(key);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
