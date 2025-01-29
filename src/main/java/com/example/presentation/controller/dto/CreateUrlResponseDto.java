@@ -14,7 +14,8 @@ public record CreateUrlResponseDto(
         String longUrl,
 
         @NonNull
-        @JsonProperty("short_url") String shortUrl
+        @JsonProperty("short_url")
+        String shortUrl
 ) {
     public static CreateUrlResponseDto from(Url url) {
         return new CreateUrlResponseDto(url.id(), url.longUrl(), url.shortUrl());

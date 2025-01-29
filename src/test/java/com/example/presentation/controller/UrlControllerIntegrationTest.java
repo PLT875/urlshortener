@@ -52,6 +52,43 @@ public class UrlControllerIntegrationTest extends BaseIntegrationTest {
             body("short_url", equalTo(shortUrl));
     }
 
+    @Test
+    void getUrl() {
+        String requestBody = """
+                {
+                    "url": "https://bbc.co.uk"
+                }
+                """;
+
+        Response response = given().
+            header("Content-Type", "application/json").
+            header("Accept", "application/json").
+            body(requestBody).
+            when().
+            post("/v1/url").
+            then().
+            extract().
+            response();
+
+        assertThat(response.statusCode()).isEqualTo(SC_CREATED);
+        String key = response.getBody().jsonPath().getString("key");
+        String shortUrl = response.getBody().jsonPath().getString("short_url");
+        String longUrl = response.getBody().jsonPath().getString("long_url");
+
+        when().
+            get("/v1/url/" + key).
+        then().
+            statusCode(SC_OK).
+            body("key", equalTo(key)).
+            body("short_url", equalTo(shortUrl)).
+            body("long_url", equalTo(longUrl));
+
+        when().
+            get("/v1/url/unknown").
+        then().
+            statusCode(SC_NOT_FOUND);
+    }
+
     @ParameterizedTest
     @ValueSource(strings = {
             "",
