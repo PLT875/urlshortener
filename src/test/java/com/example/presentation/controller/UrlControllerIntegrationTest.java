@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import static com.example.presentation.controller.UrlControllerFixtures.createShortUrl;
 import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.when;
 import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
@@ -26,21 +27,21 @@ public class UrlControllerIntegrationTest extends BaseIntegrationTest {
                 }
                 """;
 
-        Response response = given().
-            header("Content-Type", "application/json").
-            header("Accept", "application/json").
-            body(requestBody).
+        Response createShortUrlResponse =
+            given().
+                header("Content-Type", "application/json").
+                header("Accept", "application/json").
+                body(requestBody).
             when().
                 post("/v1/url").
             then().
+                statusCode(SC_CREATED).
                 extract().
                 response();
 
-        assertThat(response.statusCode()).isEqualTo(SC_CREATED);
-
-        String key = response.getBody().jsonPath().getString("key");
-        String longUrl = response.getBody().jsonPath().getString("long_url");
-        String shortUrl = response.getBody().jsonPath().getString("short_url");
+        String key = createShortUrlResponse.getBody().jsonPath().getString("key");
+        String longUrl = createShortUrlResponse.getBody().jsonPath().getString("long_url");
+        String shortUrl = createShortUrlResponse.getBody().jsonPath().getString("short_url");
         assertThat(shortUrl).startsWith("http://localhost:8888");
 
         given().
@@ -58,26 +59,11 @@ public class UrlControllerIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void whenGetUrl_thenOk() {
-        String requestBody = """
-                {
-                    "url": "https://bbc.co.uk"
-                }
-                """;
-
-        Response response = given().
-            header("Content-Type", "application/json").
-            header("Accept", "application/json").
-            body(requestBody).
-            when().
-                post("/v1/url").
-            then().
-                extract().
-                response();
-
-        assertThat(response.statusCode()).isEqualTo(SC_CREATED);
-        String key = response.getBody().jsonPath().getString("key");
-        String shortUrl = response.getBody().jsonPath().getString("short_url");
-        String longUrl = response.getBody().jsonPath().getString("long_url");
+        String url = "https://bbc.co.uk";
+        Response createShortUrlResponse = createShortUrl(url);
+        String key = createShortUrlResponse.getBody().jsonPath().getString("key");
+        String longUrl = createShortUrlResponse.getBody().jsonPath().getString("long_url");
+        String shortUrl = createShortUrlResponse.getBody().jsonPath().getString("short_url");
 
         when().
             get("/v1/url/" + key).
@@ -125,24 +111,9 @@ public class UrlControllerIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void whenDeleteShortUrl_thenNoContent() {
-        String requestBody = """
-                {
-                    "url": "https://www.wikipedia.org"
-                }
-                """;
-
-        Response response = given().
-            header("Content-Type", "application/json").
-            header("Accept", "application/json").
-            body(requestBody).
-            when().
-                post("/v1/url").
-            then().
-                extract().
-                response();
-
-        assertThat(response.statusCode()).isEqualTo(SC_CREATED);
-        String key = response.getBody().jsonPath().getString("key");
+        String url = "https://www.wikipedia.org";
+        Response createShortUrlResponse = createShortUrl(url);
+        String key = createShortUrlResponse.getBody().jsonPath().getString("key");
 
         when().
             delete("/v1/url/" + key).
