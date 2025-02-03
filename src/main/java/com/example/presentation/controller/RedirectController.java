@@ -22,7 +22,7 @@ public class RedirectController {
     @GetMapping("/{key}")
     ResponseEntity<Void> redirectWithLocation(@PathVariable("key") String key) {
         HttpHeaders headers = new HttpHeaders();
-        headers.set(HttpHeaders.LOCATION, urlService.findLongUrl(key));
+        headers.set(HttpHeaders.LOCATION, urlService.getUrl(key).longUrl());
         return new ResponseEntity<>(headers, HttpStatus.FOUND);
     }
 

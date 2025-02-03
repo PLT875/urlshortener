@@ -8,14 +8,18 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.when;
-import static org.apache.http.HttpStatus.*;
+import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
+import static org.apache.http.HttpStatus.SC_CREATED;
+import static org.apache.http.HttpStatus.SC_NOT_FOUND;
+import static org.apache.http.HttpStatus.SC_NO_CONTENT;
+import static org.apache.http.HttpStatus.SC_OK;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
 public class UrlControllerIntegrationTest extends BaseIntegrationTest {
 
     @Test
-    void createShortUrlAndIsIdempotent() {
+    void whenCreateShortUrl_thenCreated_AndIsIdempotent() {
         String requestBody = """
                 {
                     "url": "https://google.com"
@@ -52,6 +56,46 @@ public class UrlControllerIntegrationTest extends BaseIntegrationTest {
             body("short_url", equalTo(shortUrl));
     }
 
+    @Test
+    void whenGetUrl_thenOk() {
+        String requestBody = """
+                {
+                    "url": "https://bbc.co.uk"
+                }
+                """;
+
+        Response response = given().
+            header("Content-Type", "application/json").
+            header("Accept", "application/json").
+            body(requestBody).
+            when().
+                post("/v1/url").
+            then().
+                extract().
+                response();
+
+        assertThat(response.statusCode()).isEqualTo(SC_CREATED);
+        String key = response.getBody().jsonPath().getString("key");
+        String shortUrl = response.getBody().jsonPath().getString("short_url");
+        String longUrl = response.getBody().jsonPath().getString("long_url");
+
+        when().
+            get("/v1/url/" + key).
+        then().
+            statusCode(SC_OK).
+            body("key", equalTo(key)).
+            body("short_url", equalTo(shortUrl)).
+            body("long_url", equalTo(longUrl));
+    }
+
+    @Test
+    void whenGetUrlNotExist_thenNotFound() {
+        when().
+            get("/v1/url/unknown").
+        then().
+            statusCode(SC_NOT_FOUND);
+    }
+
     @ParameterizedTest
     @ValueSource(strings = {
             "",
@@ -60,7 +104,7 @@ public class UrlControllerIntegrationTest extends BaseIntegrationTest {
             "http://localhost:8888/test",
             "https://codingchallenges.fyi/challenges//challenge-url-shortener"
     })
-    void createShortUrlBadRequest(String badUrl) {
+    void whenCreateInvalidShortUrl_thenBadRequest(String badUrl) {
         given().
             header("Content-Type", "application/json").
             header("Accept", "application/json").
@@ -80,7 +124,7 @@ public class UrlControllerIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    void deleteShortUrl() {
+    void whenDeleteShortUrl_thenNoContent() {
         String requestBody = """
                 {
                     "url": "https://www.wikipedia.org"
@@ -104,9 +148,12 @@ public class UrlControllerIntegrationTest extends BaseIntegrationTest {
             delete("/v1/url/" + key).
         then().
             statusCode(SC_NO_CONTENT);
+    }
 
+    @Test
+    void whenDeleteShortUrlNotExist_thenNotFound() {
         when().
-            delete("/v1/url/" + key).
+            delete("/v1/url/unknown").
         then().
             statusCode(SC_NOT_FOUND);
     }

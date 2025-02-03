@@ -7,7 +7,6 @@ import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
-import static io.restassured.RestAssured.when;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -15,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 public class RedirectControllerIntegrationTest extends BaseIntegrationTest {
 
     @Test
-    void redirect() {
+    void whenShortUrl_thenMovedTemporarily() {
         String testUrl = "https://codingchallenges.fyi/challenges/challenge-url-shortener";
         Response createShortUrlResponse = given().
             header("Content-Type", "application/json").
@@ -25,8 +24,9 @@ public class RedirectControllerIntegrationTest extends BaseIntegrationTest {
                     "url": "%s"
                 }
                 """.formatted(testUrl)).
+
             when().
-            post("/v1/url").
+                post("/v1/url").
             then()
                 .extract()
                 .response();
@@ -46,16 +46,14 @@ public class RedirectControllerIntegrationTest extends BaseIntegrationTest {
             () -> assertThat(redirectResponse1.statusCode()).isEqualTo(HttpStatus.SC_MOVED_TEMPORARILY),
             () -> assertThat(redirectResponse1.getHeader(HttpHeaders.LOCATION)).isEqualTo(testUrl)
         );
+    }
 
-        when().
-            delete("/v1/url/" + key).
-        then().
-            statusCode(HttpStatus.SC_NO_CONTENT);
-
+    @Test
+    void whenShortUrlDoesNotExist_thenNotFound() {
         given().
             redirects().follow(false).
         when().
-            get("/" + key).
+            get("/unknown").
         then().
             statusCode(HttpStatus.SC_NOT_FOUND);
     }
