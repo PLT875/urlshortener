@@ -3,7 +3,7 @@ package com.example.domain;
 import com.example.domain.configuration.DomainConfiguration;
 import com.example.domain.exception.UrlNotFoundException;
 import com.example.persistence.UrlRepository;
-import com.example.persistence.dao.UrlDao;
+import com.example.persistence.entity.UrlEntity;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.stereotype.Service;
@@ -21,7 +21,7 @@ public class UrlService {
     private final UrlRepository urlRepository;
 
     public Url getUrl(String id) {
-        Optional<UrlDao> url = urlRepository.findById(id);
+        Optional<UrlEntity> url = urlRepository.findById(id);
         if (url.isEmpty()) {
             throw new UrlNotFoundException("URL not found");
         }
@@ -33,12 +33,12 @@ public class UrlService {
         // another widely documented method is a base62 encoding of its uniquely generated id (number)
         String id = DigestUtils.sha256Hex(longUrl).substring(0, 7);
         Url url = new Url(id, longUrl, shortUrl(id));
-        urlRepository.save(Url.toDao(url));
+        urlRepository.save(Url.toEntity(url));
         return url;
     }
 
     public void deleteShortUrl(String id) {
-        Optional<UrlDao> url = urlRepository.findById(id);
+        Optional<UrlEntity> url = urlRepository.findById(id);
         if (url.isEmpty()) {
             throw new UrlNotFoundException("URL not found");
         }

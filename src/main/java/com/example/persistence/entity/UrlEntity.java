@@ -1,4 +1,4 @@
-package com.example.persistence.dao;
+package com.example.persistence.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UrlDao {
+public class UrlEntity {
         @Id
         @Column(name = "id")
         private String id;
