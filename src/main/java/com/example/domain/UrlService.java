@@ -29,12 +29,29 @@ public class UrlService {
     }
 
     public Url createShortUrl(String longUrl) {
-        // simple shortening function for demo purposes (not production ready)
-        // another widely documented method is a base62 encoding of its uniquely generated id (number)
-        String id = DigestUtils.sha256Hex(longUrl).substring(0, 7);
-        Url url = new Url(id, longUrl, shortUrl(id));
-        urlRepository.save(Url.toEntity(url));
-        return url;
+        // simple shortening function for demo purposes with basic collision resolution
+        String id = hash(longUrl);
+        Optional<UrlEntity> urlEntity = urlRepository.findById(id);
+        Url newUrl;
+        if (urlEntity.isEmpty()) {
+            newUrl = new Url(id, longUrl, shortUrl(id));
+            urlRepository.save(Url.toEntity(newUrl));
+            return newUrl;
+        }
+        String existingLongUrl = urlEntity.get().getLongUrl();
+        if (existingLongUrl.equals(longUrl)) {
+            return new Url(id, longUrl, shortUrl(id));
+        }
+        int offset = 1;
+        do {
+            id = hash(longUrl + offset);
+            offset++;
+        }
+        while (urlRepository.findById(id).isPresent());
+
+        newUrl = new Url(id, longUrl, shortUrl(id));
+        urlRepository.save(Url.toEntity(newUrl));
+        return newUrl;
     }
 
     public void deleteShortUrl(String id) {
@@ -43,6 +60,10 @@ public class UrlService {
             throw new UrlNotFoundException("URL not found");
         }
         urlRepository.delete(url.get());
+    }
+
+    private String hash(String url) {
+        return DigestUtils.sha256Hex(url).substring(0, 7);
     }
 
     private String shortUrl(String id) {
