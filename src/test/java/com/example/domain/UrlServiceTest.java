@@ -11,10 +11,15 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class UrlServiceTest {
     @Mock
@@ -32,16 +37,16 @@ public class UrlServiceTest {
     }
 
     @Test
-    void createShortUrl_isIdempotent() {
+    void createShortUrl_isIdempotent() throws ExecutionException, InterruptedException {
         // given
         String longUrl = "http://www.amazon.com";
         when(domainConfiguration.getScheme()).thenReturn("http");
         when(domainConfiguration.getDomain()).thenReturn("localhost:8888");
-        Url url = urlService.createShortUrl(longUrl);
+        Url url = urlService.createShortUrl(longUrl).toCompletableFuture().get();
         reset(urlRepository);
         when(urlRepository.findById(url.id())).thenReturn(Optional.of(new UrlEntity(url.id(), longUrl)));
         // when
-        Url actual = urlService.createShortUrl(longUrl);
+        Url actual = urlService.createShortUrl(longUrl).toCompletableFuture().get();
         // then
         Url expected = new Url(url.id(), longUrl, "http://localhost:8888/" + url.id());
         assertThat(actual).isEqualTo(expected);
@@ -49,7 +54,7 @@ public class UrlServiceTest {
     }
 
     @Test
-    void createShortUrl_handleCollisions() {
+    void createShortUrl_handleCollisions() throws ExecutionException, InterruptedException {
         // given
         String longUrl = "http://www.amazon.com";
         String id1 = DigestUtils.sha256Hex(longUrl).substring(0, 7);
@@ -61,7 +66,7 @@ public class UrlServiceTest {
         when(urlRepository.findById(id1)).thenReturn(Optional.of(conflictedUrlEntity1));
         when(urlRepository.findById(id2)).thenReturn(Optional.of(conflictedUrlEntity2));
         // when
-        Url actual = urlService.createShortUrl(longUrl);
+        Url actual = urlService.createShortUrl(longUrl).toCompletableFuture().get();
         // then
         Url expected = new Url(actual.id(), longUrl, "http://localhost:8888/" + actual.id());
         assertThat(actual).isEqualTo(expected);

@@ -19,6 +19,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
+
 @RestController
 @RequiredArgsConstructor
 @Slf4j
@@ -26,20 +29,21 @@ public class UrlController {
     private final UrlService urlService;
 
     @GetMapping(path = "/v1/url/{key}", produces = "application/json")
-    ResponseEntity<GetUrlResponseDto> getUrl(@PathVariable("key") String key) {
-        return new ResponseEntity<>(GetUrlResponseDto.from(urlService.getUrl(key)), HttpStatus.OK);
+    CompletionStage<ResponseEntity<GetUrlResponseDto>> getUrl(@PathVariable("key") String key) {
+        return urlService.getUrl(key)
+                .thenApply(url -> new ResponseEntity<>(GetUrlResponseDto.from(url), HttpStatus.OK));
     }
 
     @PostMapping(path = "/v1/url", consumes = "application/json", produces = "application/json")
-    ResponseEntity<CreateUrlResponseDto> createShortUrl(@RequestBody @Valid CreateUrlRequestDto shortenUrlRequestDto) {
-        return new ResponseEntity<>(CreateUrlResponseDto
-                .from(urlService.createShortUrl(shortenUrlRequestDto.url())), HttpStatus.CREATED);
+    CompletionStage<ResponseEntity<CreateUrlResponseDto>> createShortUrl(@RequestBody @Valid CreateUrlRequestDto shortenUrlRequestDto) {
+        return urlService.createShortUrl(shortenUrlRequestDto.url())
+                .thenApply(url -> new ResponseEntity<>(CreateUrlResponseDto.from(url), HttpStatus.CREATED));
     }
 
     @DeleteMapping(path = "/v1/url/{key}")
-    ResponseEntity<Void> deleteShortUrl(@PathVariable("key") String key) {
-        urlService.deleteShortUrl(key);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    CompletionStage<ResponseEntity<Void>> deleteShortUrl(@PathVariable("key") String key) {
+        return urlService.deleteShortUrl(key)
+                .thenApply(v -> new ResponseEntity<>(HttpStatus.NO_CONTENT));
     }
 
     @ExceptionHandler(UrlNotFoundException.class)

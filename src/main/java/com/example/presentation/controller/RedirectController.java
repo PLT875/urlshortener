@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.util.concurrent.CompletionStage;
+
 @Slf4j
 @Controller
 @RequiredArgsConstructor
@@ -20,10 +22,12 @@ public class RedirectController {
     private final UrlService urlService;
 
     @GetMapping("/{key}")
-    ResponseEntity<Void> redirectWithLocation(@PathVariable("key") String key) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set(HttpHeaders.LOCATION, urlService.getUrl(key).longUrl());
-        return new ResponseEntity<>(headers, HttpStatus.FOUND);
+    CompletionStage<ResponseEntity<Void>> redirectWithLocation(@PathVariable("key") String key) {
+        return urlService.getUrl(key).thenApply(url -> {
+            HttpHeaders headers = new HttpHeaders();
+            headers.set(HttpHeaders.LOCATION, url.longUrl());
+            return new ResponseEntity<>(headers, HttpStatus.FOUND);
+        });
     }
 
     @ExceptionHandler(UrlNotFoundException.class)
