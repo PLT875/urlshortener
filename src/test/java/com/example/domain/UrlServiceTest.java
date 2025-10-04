@@ -65,7 +65,7 @@ public class UrlServiceTest {
         // then
         Url expected = new Url(actual.id(), longUrl, "http://localhost:8888/" + actual.id());
         assertThat(actual).isEqualTo(expected);
-        verify(urlRepository, times(3)).findById(any());
+        verify(urlRepository, times(2)).findById(any());
         verify(urlRepository, times(1)).save(any());
     }
 

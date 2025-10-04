@@ -9,8 +9,6 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.stereotype.Service;
 import com.example.domain.model.Url;
 
-import java.util.Optional;
-
 import static java.lang.String.format;
 
 @Service
@@ -21,45 +19,49 @@ public class UrlService {
     private final UrlRepository urlRepository;
 
     public Url getUrl(String id) {
-        Optional<UrlEntity> url = urlRepository.findById(id);
-        if (url.isEmpty()) {
-            throw new UrlNotFoundException("URL not found");
-        }
-        return new Url(id, url.get().getLongUrl(), shortUrl(id));
+        return urlRepository.findById(id)
+                .map(urlEntity -> new Url(id, urlEntity.getLongUrl(), shortUrl(id)))
+                .orElseThrow(() -> new UrlNotFoundException("URL not found"));
     }
 
     public Url createShortUrl(String longUrl) {
-        // simple shortening function for demo purposes with basic collision resolution
         String id = hash(longUrl);
-        Optional<UrlEntity> urlEntity = urlRepository.findById(id);
-        Url newUrl;
-        if (urlEntity.isEmpty()) {
-            newUrl = new Url(id, longUrl, shortUrl(id));
-            urlRepository.save(Url.toEntity(newUrl));
-            return newUrl;
+        return urlRepository.findById(id)
+                .map(urlEntity -> returnExistingOrResolveConflict(urlEntity, longUrl))
+                .orElseGet(() ->  create(longUrl));
+    }
+
+    private Url create(String longUrl) {
+        String id = hash(longUrl);
+        Url url = new Url(id, longUrl, shortUrl(id));
+        urlRepository.save(Url.toEntity(url));
+        return url;
+    }
+
+    private Url returnExistingOrResolveConflict(UrlEntity urlEntity, String requestedLongUrl) {
+        String existingLongUrl = urlEntity.getLongUrl();
+        if (existingLongUrl.equals(requestedLongUrl)) {
+            return new Url(urlEntity.getId(), requestedLongUrl, shortUrl(urlEntity.getId()));
         }
-        String existingLongUrl = urlEntity.get().getLongUrl();
-        if (existingLongUrl.equals(longUrl)) {
-            return new Url(id, longUrl, shortUrl(id));
-        }
+        String longUrl = urlEntity.getLongUrl();
         int offset = 1;
+        String id;
         do {
             id = hash(longUrl + offset);
             offset++;
         }
         while (urlRepository.findById(id).isPresent());
 
-        newUrl = new Url(id, longUrl, shortUrl(id));
+        Url newUrl = new Url(id, requestedLongUrl, shortUrl(id));
         urlRepository.save(Url.toEntity(newUrl));
         return newUrl;
     }
 
     public void deleteShortUrl(String id) {
-        Optional<UrlEntity> url = urlRepository.findById(id);
-        if (url.isEmpty()) {
-            throw new UrlNotFoundException("URL not found");
-        }
-        urlRepository.delete(url.get());
+        urlRepository.findById(id)
+                .ifPresentOrElse(
+                        urlRepository::delete,
+                        () -> { throw new UrlNotFoundException("URL not found"); });
     }
 
     private String hash(String url) {
