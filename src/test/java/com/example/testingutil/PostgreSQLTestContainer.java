@@ -3,7 +3,7 @@ package com.example.testingutil;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 public class PostgreSQLTestContainer extends PostgreSQLContainer<PostgreSQLTestContainer> {
-    private static final String DOCKER_IMAGE_NAME = "postgres:14.15-alpine3.21";
+    private static final String DOCKER_IMAGE_NAME = "postgres:15.10-alpine3.21";
     private static PostgreSQLTestContainer container;
 
     private PostgreSQLTestContainer() {
