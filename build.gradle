@@ -30,11 +30,11 @@ dependencies {
 	implementation 'org.liquibase:liquibase-core'
 	implementation 'org.postgresql:postgresql'
 	implementation 'commons-codec:commons-codec:1.17.1'
-	implementation 'commons-validator:commons-validator:1.9.0'
+	implementation 'commons-validator:commons-validator:1.10.1'
 	compileOnly 'org.projectlombok:lombok:1.18.38'
 	annotationProcessor 'org.projectlombok:lombok:1.18.38'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.testcontainers:postgresql:1.20.4'
+	testImplementation 'org.testcontainers:postgresql:1.21.4'
 	testImplementation 'io.rest-assured:rest-assured:5.5.0'
 	testImplementation 'org.hamcrest:hamcrest:3.0'
 	// Ensure JUnit Platform launcher is available to Gradle test executor
