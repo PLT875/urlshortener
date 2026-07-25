@@ -1,6 +1,5 @@
 package com.example.api.dto;
 
-import com.example.domain.model.Url;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.NonNull;
@@ -12,20 +11,10 @@ public record GetUrlResponseDto(
         String key,
 
         @NonNull
-        @JsonProperty("short_url")
-        String shortUrl,
+        @JsonProperty("long_url")
+        String longUrl,
 
         @NonNull
-        @JsonProperty("long_url")
-        String longUrl) {
-
-    public static GetUrlResponseDto from(Url url) {
-        return GetUrlResponseDto
-                .builder()
-                .key(url.id())
-                .shortUrl(url.shortUrl())
-                .longUrl(url.longUrl())
-                .build();
-    }
-
+        @JsonProperty("short_url")
+        String shortUrl) {
 }
