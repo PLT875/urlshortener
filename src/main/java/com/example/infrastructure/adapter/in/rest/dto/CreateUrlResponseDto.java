@@ -1,4 +1,4 @@
-package com.example.adapter.in.rest.dto;
+package com.example.infrastructure.adapter.in.rest.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.NonNull;

@@ -1,4 +1,4 @@
-package com.example.adapter.in.rest;
+package com.example.infrastructure.adapter.in.rest;
 
 import com.example.application.UrlService;
 import com.example.domain.exception.UrlNotFoundException;

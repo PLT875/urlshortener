@@ -1,11 +1,11 @@
-package com.example.adapter.in.rest;
+package com.example.infrastructure.adapter.in.rest;
 
 import com.example.testingutil.BaseIntegrationTest;
 import io.restassured.response.Response;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.Test;
 
-import static com.example.adapter.in.rest.UrlControllerFixtures.createShortUrl;
+import static com.example.infrastructure.adapter.in.rest.UrlControllerFixtures.createShortUrl;
 import static io.restassured.RestAssured.given;
 
 import static org.apache.http.HttpHeaders.LOCATION;

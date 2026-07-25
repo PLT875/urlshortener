@@ -1,7 +1,7 @@
-package com.example.adapter.in.rest;
+package com.example.infrastructure.adapter.in.rest;
 
-import com.example.adapter.in.rest.dto.ErrorDto;
-import com.example.adapter.in.rest.dto.FieldErrorDto;
+import com.example.infrastructure.adapter.in.rest.dto.ErrorDto;
+import com.example.infrastructure.adapter.in.rest.dto.FieldErrorDto;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;

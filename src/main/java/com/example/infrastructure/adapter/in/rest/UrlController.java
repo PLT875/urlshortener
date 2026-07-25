@@ -1,10 +1,10 @@
-package com.example.adapter.in.rest;
+package com.example.infrastructure.adapter.in.rest;
 
 import com.example.application.UrlService;
 import com.example.domain.exception.UrlNotFoundException;
-import com.example.adapter.in.rest.dto.CreateUrlRequestDto;
-import com.example.adapter.in.rest.dto.CreateUrlResponseDto;
-import com.example.adapter.in.rest.dto.GetUrlResponseDto;
+import com.example.infrastructure.adapter.in.rest.dto.CreateUrlRequestDto;
+import com.example.infrastructure.adapter.in.rest.dto.CreateUrlResponseDto;
+import com.example.infrastructure.adapter.in.rest.dto.GetUrlResponseDto;
 import com.example.domain.model.Url;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

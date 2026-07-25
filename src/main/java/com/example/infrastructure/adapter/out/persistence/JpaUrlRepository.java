@@ -1,4 +1,4 @@
-package com.example.adapter.out.persistence;
+package com.example.infrastructure.adapter.out.persistence;
 
 import com.example.domain.port.out.UrlRepository;
 import com.example.domain.model.Url;

@@ -1,4 +1,4 @@
-package com.example.adapter.in.rest;
+package com.example.infrastructure.adapter.in.rest;
 
 import io.restassured.response.Response;
 
