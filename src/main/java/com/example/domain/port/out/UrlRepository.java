@@ -1,4 +1,4 @@
-package com.example.domain;
+package com.example.domain.port.out;
 
 import com.example.domain.model.Url;
 import java.util.Optional;

@@ -1,4 +1,4 @@
-package com.example.api;
+package com.example.adapter.in.rest;
 
 import com.example.testingutil.BaseIntegrationTest;
 import io.restassured.response.Response;
@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import static com.example.api.UrlControllerFixtures.createShortUrl;
+import static com.example.adapter.in.rest.UrlControllerFixtures.createShortUrl;
 import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.when;
 import static org.apache.http.HttpStatus.SC_BAD_REQUEST;

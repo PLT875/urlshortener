@@ -1,4 +1,4 @@
-package com.example.api.validation;
+package com.example.adapter.in.rest.validation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

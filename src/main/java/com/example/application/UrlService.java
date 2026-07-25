@@ -1,6 +1,8 @@
-package com.example.domain;
+package com.example.application;
 
 import com.example.domain.exception.UrlNotFoundException;
+import com.example.domain.port.in.UrlUseCase;
+import com.example.domain.port.out.UrlRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.stereotype.Service;
@@ -8,7 +10,7 @@ import com.example.domain.model.Url;
 
 @Service
 @RequiredArgsConstructor
-public class UrlService {
+public class UrlService implements UrlUseCase {
     private final UrlRepository urlRepository;
 
     public Url getUrl(String id) {

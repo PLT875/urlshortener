@@ -1,6 +1,7 @@
-package com.example.domain;
+package com.example.application;
 
 import com.example.domain.model.Url;
+import com.example.domain.port.out.UrlRepository;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

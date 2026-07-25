@@ -1,4 +1,4 @@
-package com.example.api.validation;
+package com.example.adapter.in.rest.validation;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
@@ -10,7 +10,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Documented
-@Constraint(validatedBy = UrlConstraintValidator.class)
+@Constraint(validatedBy = com.example.adapter.in.rest.validation.UrlConstraintValidator.class)
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ValidUrl {

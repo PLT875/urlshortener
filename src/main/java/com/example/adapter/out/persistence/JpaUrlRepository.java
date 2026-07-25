@@ -1,8 +1,7 @@
-package com.example.persistence.repository;
+package com.example.adapter.out.persistence;
 
-import com.example.domain.UrlRepository;
+import com.example.domain.port.out.UrlRepository;
 import com.example.domain.model.Url;
-import com.example.persistence.entity.UrlEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import java.util.Optional;
@@ -21,7 +20,7 @@ public class JpaUrlRepository implements UrlRepository {
 
     @Override
     public void save(Url url) {
-        UrlEntity entity = toEntity(url);
+        JpaUrlEntity entity = toEntity(url);
         urlCrudRepository.save(entity);
     }
 
@@ -30,11 +29,11 @@ public class JpaUrlRepository implements UrlRepository {
         urlCrudRepository.deleteById(id);
     }
 
-    private UrlEntity toEntity(Url url) {
-        return new UrlEntity(url.id(), url.longUrl());
+    private JpaUrlEntity toEntity(Url url) {
+        return new JpaUrlEntity(url.id(), url.longUrl());
     }
 
-    private Url toDomain(UrlEntity entity) {
+    private Url toDomain(JpaUrlEntity entity) {
         return new Url(entity.getId(), entity.getLongUrl());
     }
 }

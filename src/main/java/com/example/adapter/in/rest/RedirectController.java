@@ -1,6 +1,6 @@
-package com.example.api;
+package com.example.adapter.in.rest;
 
-import com.example.domain.UrlService;
+import com.example.application.UrlService;
 import com.example.domain.exception.UrlNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
