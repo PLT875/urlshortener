@@ -1,4 +1,4 @@
-package com.example.presentation.controller;
+package com.example.api;
 
 import io.restassured.response.Response;
 
@@ -23,6 +23,4 @@ public final class UrlControllerFixtures {
                 extract().
                 response();
     }
-
-
 }

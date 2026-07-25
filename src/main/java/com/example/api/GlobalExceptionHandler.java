@@ -1,7 +1,7 @@
-package com.example.presentation.controller;
+package com.example.api;
 
-import com.example.presentation.controller.dto.ErrorDto;
-import com.example.presentation.controller.dto.FieldErrorDto;
+import com.example.api.dto.ErrorDto;
+import com.example.api.dto.FieldErrorDto;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;

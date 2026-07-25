@@ -1,4 +1,4 @@
-package com.example.presentation.controller.dto;
+package com.example.api.dto;
 
 import java.util.List;
 

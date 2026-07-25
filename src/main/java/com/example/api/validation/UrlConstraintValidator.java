@@ -1,4 +1,4 @@
-package com.example.presentation.controller.validation;
+package com.example.api.validation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

@@ -5,8 +5,10 @@ import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -16,7 +18,10 @@ import org.testcontainers.utility.DockerImageName;
 @SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @ActiveProfiles("test")
 public abstract class BaseIntegrationTest {
-    static final String POSTGRES_DOCKER_IMAGE = "postgres:14.15-alpine3.21";
+    @Autowired
+    protected JdbcTemplate jdbcTemplate;
+
+    static final String POSTGRES_DOCKER_IMAGE = "postgres:15.10-alpine3.21";
     static PostgreSQLContainer<?> postgresContainer = new PostgreSQLContainer<>(DockerImageName.parse(POSTGRES_DOCKER_IMAGE));
 
     static {
@@ -37,5 +42,9 @@ public abstract class BaseIntegrationTest {
         System.setProperty("DB_NAME", postgresContainer.getDatabaseName());
         System.setProperty("DB_USERNAME", postgresContainer.getUsername());
         System.setProperty("DB_PASSWORD", postgresContainer.getPassword());
+    }
+
+    protected void loadUrlData(String id, String url) {
+        jdbcTemplate.update("INSERT INTO url(id, long_url) VALUES (?, ?)", id, url);
     }
 }
