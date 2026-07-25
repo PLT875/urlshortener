@@ -1,4 +1,4 @@
-package com.example.persistence.entity;
+package com.example.adapter.out.persistence;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UrlEntity {
+public class JpaUrlEntity {
         @Id
         @Column(name = "id")
         private String id;

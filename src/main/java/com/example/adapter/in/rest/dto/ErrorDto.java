@@ -1,4 +1,4 @@
-package com.example.api.dto;
+package com.example.adapter.in.rest.dto;
 
 import java.util.List;
 

@@ -1,9 +1,11 @@
-package com.example.api.dto;
+package com.example.adapter.in.rest.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.NonNull;
 
-public record CreateUrlResponseDto(
+@Builder
+public record GetUrlResponseDto(
         @NonNull
         @JsonProperty("key")
         String key,
