@@ -1,6 +1,5 @@
 package com.example.api.dto;
 
-import com.example.domain.model.Url;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.NonNull;
 
@@ -15,9 +14,5 @@ public record CreateUrlResponseDto(
 
         @NonNull
         @JsonProperty("short_url")
-        String shortUrl
-) {
-    public static CreateUrlResponseDto from(Url url) {
-        return new CreateUrlResponseDto(url.id(), url.longUrl(), url.shortUrl());
-    }
+        String shortUrl) {
 }

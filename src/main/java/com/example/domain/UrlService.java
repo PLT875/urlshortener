@@ -1,24 +1,19 @@
 package com.example.domain;
 
-import com.example.domain.config.DomainConfiguration;
 import com.example.domain.exception.UrlNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.stereotype.Service;
 import com.example.domain.model.Url;
 
-import static java.lang.String.format;
-
 @Service
 @RequiredArgsConstructor
 public class UrlService {
-    private static final String SHORT_URL_FORMAT = "%s://%s/%s";
-    private final DomainConfiguration domainConfiguration;
     private final UrlRepository urlRepository;
 
     public Url getUrl(String id) {
         return urlRepository.findById(id)
-                .map(url -> new Url(url.id(), url.longUrl(), shortUrl(url.id())))
+                .map(url -> new Url(url.id(), url.longUrl()))
                 .orElseThrow(() -> new UrlNotFoundException("URL not found"));
     }
 
@@ -31,7 +26,7 @@ public class UrlService {
 
     private Url create(String longUrl) {
         String id = hash(longUrl);
-        Url url = new Url(id, longUrl, shortUrl(id));
+        Url url = new Url(id, longUrl);
         urlRepository.save(url);
         return url;
     }
@@ -39,7 +34,7 @@ public class UrlService {
     private Url returnExistingOrResolveConflict(Url existingUrl, String requestedLongUrl) {
         String existingLongUrl = existingUrl.longUrl();
         if (existingLongUrl.equals(requestedLongUrl)) {
-            return new Url(existingUrl.id(), requestedLongUrl, shortUrl(existingUrl.id()));
+            return new Url(existingUrl.id(), requestedLongUrl);
         }
         int offset = 1;
         String id;
@@ -49,7 +44,7 @@ public class UrlService {
         }
         while (urlRepository.findById(id).isPresent());
 
-        Url newUrl = new Url(id, requestedLongUrl, shortUrl(id));
+        Url newUrl = new Url(id, requestedLongUrl);
         urlRepository.save(newUrl);
         return newUrl;
     }
@@ -65,8 +60,4 @@ public class UrlService {
         return DigestUtils.sha256Hex(url).substring(0, 7);
     }
 
-    private String shortUrl(String id) {
-        return format(SHORT_URL_FORMAT,
-                domainConfiguration.getScheme(), domainConfiguration.getDomain(), id);
-    }
 }
