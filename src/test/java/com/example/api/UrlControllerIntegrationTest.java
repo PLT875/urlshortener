@@ -1,18 +1,13 @@
-package com.example.presentation.controller;
+package com.example.api;
 
-import com.example.persistence.UrlRepository;
-import com.example.persistence.entity.UrlEntity;
 import com.example.testingutil.BaseIntegrationTest;
 import io.restassured.response.Response;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Set;
-
-import static com.example.presentation.controller.UrlControllerFixtures.createShortUrl;
+import static com.example.api.UrlControllerFixtures.createShortUrl;
 import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.when;
 import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
@@ -25,9 +20,6 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class UrlControllerIntegrationTest extends BaseIntegrationTest {
-
-    @Autowired
-    private UrlRepository urlRepository;
 
     @Test
     void whenCreateShortUrl_thenCreated_AndIsIdempotent() {
@@ -72,11 +64,8 @@ public class UrlControllerIntegrationTest extends BaseIntegrationTest {
         String url = "http://www.amazon.com";
         String conflictedId1 = DigestUtils.sha256Hex(url).substring(0, 7);
         String conflictedId2 = DigestUtils.sha256Hex(url + 1).substring(0, 7);
-        Set<UrlEntity> conflictedUrlEntities = Set.of(
-            new UrlEntity(conflictedId1, "http://www.amazon.co.uk"),
-            new UrlEntity(conflictedId2, "http://www.amazon.de")
-        );
-        urlRepository.saveAll(conflictedUrlEntities);
+        loadUrlData(conflictedId1, "http://www.amazon.co.uk");
+        loadUrlData(conflictedId2, "http://www.amazon.de");
 
         Response createShortUrlResponse = createShortUrl(url);
         String key = createShortUrlResponse.getBody().jsonPath().getString("key");

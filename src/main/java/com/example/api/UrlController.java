@@ -1,10 +1,10 @@
-package com.example.presentation.controller;
+package com.example.api;
 
 import com.example.domain.UrlService;
 import com.example.domain.exception.UrlNotFoundException;
-import com.example.presentation.controller.dto.CreateUrlRequestDto;
-import com.example.presentation.controller.dto.CreateUrlResponseDto;
-import com.example.presentation.controller.dto.GetUrlResponseDto;
+import com.example.api.dto.CreateUrlRequestDto;
+import com.example.api.dto.CreateUrlResponseDto;
+import com.example.api.dto.GetUrlResponseDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

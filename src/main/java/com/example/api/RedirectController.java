@@ -1,4 +1,4 @@
-package com.example.presentation.controller;
+package com.example.api;
 
 import com.example.domain.UrlService;
 import com.example.domain.exception.UrlNotFoundException;
